@@ -1,0 +1,6 @@
+[submodule "deps/ericw-tools"]
+	path = deps/ericw-tools
+	url = https://github.com/ericwa/ericw-tools
+[submodule "deps/oneTBB"]
+	path = deps/oneTBB
+	url = https://github.com/oneapi-src/oneTBB
