@@ -25,13 +25,12 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO OFF)
 
-add_executable(${PROJECT_NAME}
+include(cmake/combine_libs.cmake)
+
+add_library(${PROJECT_NAME} SHARED
     src/wrapper.cpp
     main.cpp
 )
-
-
-
 
 add_subdirectory(deps)
 
@@ -41,11 +40,5 @@ target_link_libraries(${PROJECT_NAME}
     libqbsp
 )
 
-add_custom_target(
-    run-ericw-test
-    COMMAND ${PROJECT_NAME}
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-    VERBATIM
-)
-
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+

@@ -8,7 +8,15 @@ set(CMAKE_USE_WIN32_THREADS_INIT 0)
 set(CMAKE_USE_PTHREADS_INIT 1)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-add_subdirectory(oneTBB)
+find_package(TBB)
+IF (${TBB_FOUND})
+    MESSAGE("use system TBB lib")
+ELSE (${TBB_FOUND})
+    MESSAGE("TBB lib not found in system, use bundled one")
+    set(TBB_TEST OFF CACHE BOOL "" FORCE) 
+    add_subdirectory(oneTBB)
+ENDIF (${TBB_FOUND})
+
 
 if (POLICY CMP0069)
     cmake_policy(SET CMP0069 NEW)
