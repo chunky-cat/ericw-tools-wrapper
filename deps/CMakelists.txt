@@ -10,6 +10,11 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 add_subdirectory(oneTBB)
 
+if (POLICY CMP0069)
+    cmake_policy(SET CMP0069 NEW)
+endif()
+
+
 # Pass -DERICWTOOLS_ASAN=YES to enable for all targets
 if(ERICWTOOLS_ASAN)
     message(STATUS "Enabling ASan on all targets")
