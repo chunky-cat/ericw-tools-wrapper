@@ -12,9 +12,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     add_definitions(-DMACOSX)
 endif()
 
-add_executable(${PROJECT_NAME}
-    main.cpp
-)
+if (POLICY CMP0069)
+    cmake_policy(SET CMP0069 NEW)
+endif()
 
 # set our C/C++ dialects
 set(CMAKE_CXX_STANDARD 20)
@@ -25,19 +25,27 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG OFF)
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION_RELWITHDEBINFO OFF)
 
+add_executable(${PROJECT_NAME}
+    src/wrapper.cpp
+    main.cpp
+)
+
+
+
+
 add_subdirectory(deps)
+
+target_include_directories(${PROJECT_NAME} PUBLIC "includes/")
 
 target_link_libraries(${PROJECT_NAME}
     libqbsp
 )
 
 add_custom_target(
-    run-qmap-viewer
+    run-ericw-test
     COMMAND ${PROJECT_NAME}
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
     VERBATIM
 )
-
-include_directories(${PROJECT_NAME} PUBLIC deps/ericw-tools/include)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")

@@ -1,21 +1,18 @@
-#include <qbsp/qbsp.hh>
-#include <common/settings.hh>
-#include <common/log.hh>
+#include <string>
+#include <chrono>
+#include <iostream>
+
+#include <ericw-tools-wrapper/wrapper.h>
 
 int main(int argc, const char **argv)
 {
-    logging::preinitialize();
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-    try
-    {
-        return qbsp_main(argc, argv);
-    }
-    catch (const settings::quit_after_help_exception &)
-    {
-        return 0;
-    }
-    catch (const std::exception &e)
-    {
-        exit_on_exception(e);
-    }
+    ericwtoolswrapper::QBsp_CreateBSP("/Users/tinogohlert/Downloads/MAP_DebugLevel.map");
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto time = end_time - start_time;
+    std::cout << "map compiled in: " << time / std::chrono::milliseconds(1) << " ms\n";
+
+    return 0;
 }

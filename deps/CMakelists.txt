@@ -23,7 +23,99 @@ if(ERICWTOOLS_TIMETRACE)
 endif()
 
 add_subdirectory(ericw-tools/3rdparty)
-add_subdirectory(ericw-tools/common)
+
+add_library(common STATIC
+    ericw-tools/common/bspinfo.cc
+    ericw-tools/common/bspfile.cc
+    ericw-tools/common/bspfile_common.cc
+    ericw-tools/common/bspfile_generic.cc
+    ericw-tools/common/bspfile_q1.cc
+    ericw-tools/common/bspfile_q2.cc
+    ericw-tools/common/bsputils.cc
+    ericw-tools/common/bspxfile.cc
+    ericw-tools/common/cmdlib.cc
+    ericw-tools/common/decompile.cc
+    ericw-tools/common/entdata.cc
+    ericw-tools/common/log.cc
+    ericw-tools/common/mathlib.cc
+    ericw-tools/common/parser.cc
+    ericw-tools/common/qvec.cc
+    ericw-tools/common/threads.cc
+    ericw-tools/common/fs.cc
+    ericw-tools/common/imglib.cc
+    ericw-tools/common/settings.cc
+    ericw-tools/common/prtfile.cc
+    ericw-tools/common/mapfile.cc
+    ericw-tools/common/debugger.natvis
+    ericw-tools/include/common/aabb.hh
+    ericw-tools/include/common/aligned_allocator.hh
+    ericw-tools/include/common/bitflags.hh
+    ericw-tools/include/common/bspinfo.hh
+    ericw-tools/include/common/bspfile.hh
+    ericw-tools/include/common/bspfile_common.hh
+    ericw-tools/include/common/bspfile_generic.hh
+    ericw-tools/include/common/bspfile_q1.hh
+    ericw-tools/include/common/bspfile_q2.hh
+    ericw-tools/include/common/bsputils.hh
+    ericw-tools/include/common/bspxfile.hh
+    ericw-tools/include/common/cmdlib.hh
+    ericw-tools/include/common/decompile.hh
+    ericw-tools/include/common/entdata.h
+    ericw-tools/include/common/iterators.hh
+    ericw-tools/include/common/log.hh
+    ericw-tools/include/common/mathlib.hh
+    ericw-tools/include/common/numeric_cast.hh
+    ericw-tools/include/common/parser.hh
+    ericw-tools/include/common/polylib.hh
+    ericw-tools/include/common/qvec.hh
+    ericw-tools/include/common/json.hh
+    ericw-tools/include/common/parallel.hh
+    ericw-tools/include/common/threads.hh
+    ericw-tools/include/common/fs.hh
+    ericw-tools/include/common/imglib.hh
+    ericw-tools/include/common/settings.hh
+    ericw-tools/include/common/prtfile.hh
+    ericw-tools/include/common/vectorutils.hh
+    ericw-tools/include/common/ostream.hh
+    ericw-tools/include/common/mapfile.hh
+)
+
+target_precompile_headers(common INTERFACE
+        <filesystem>
+        <functional>
+        <array>
+        <any>
+        <bitset>
+        <cassert>
+        <cinttypes>
+        <cstdarg>
+        <iostream>
+        <fstream>
+        <list>
+        <mutex>
+        <vector>
+        <set>
+        <unordered_set>
+        <map>
+        <unordered_map>
+        <memory>
+        <optional>
+        <sstream>
+        <string>
+        <shared_mutex>
+        <type_traits>
+        <variant>
+        <fmt/core.h>
+        <tbb/scalable_allocator.h>
+        <tbb/task_group.h>
+        <tbb/task_group.h>
+        <tbb/parallel_for.h>
+        <tbb/parallel_for_each.h>
+)
+
+target_include_directories(common PUBLIC ericw-tools/include/)
+target_link_libraries(common ${CMAKE_THREAD_LIBS_INIT} TBB::tbb TBB::tbbmalloc fmt::fmt nlohmann_json::nlohmann_json pareto)
+
 
 set(QBSP_SOURCES
     ericw-tools/qbsp/brush.cc
@@ -40,6 +132,7 @@ set(QBSP_SOURCES
     ericw-tools/qbsp/tree.cc
     ericw-tools/qbsp/writebsp.cc
     ericw-tools/qbsp/exportobj.cc
+    func_fwd.cpp
     ${QBSP_INCLUDES})
 
 add_library(libqbsp STATIC ${QBSP_SOURCES})
@@ -49,7 +142,6 @@ target_include_directories(libqbsp PUBLIC ericw-tools/3rdparty/pareto/source)
 target_include_directories(libqbsp PUBLIC ericw-tools/3rdparty/json/include)
 
 target_include_directories(libqbsp PUBLIC oneTBB/include)
-
 target_link_libraries(libqbsp common)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
