@@ -1,4 +1,5 @@
 #include <ericw-tools-wrapper/wrapper.h>
+
 #include <qbsp/qbsp.hh>
 #include <qbsp/map.hh>
 
@@ -6,6 +7,8 @@
 #include <common/log.hh>
 
 #include <vector>
+#include <iostream>
+#include <format>
 
 // forward declarations
 void Wrapped_CreateHulls();
@@ -23,7 +26,7 @@ namespace ericwtoolswrapper
         return pc;
     }
 
-    void QBsp_CreateBSP(std::string mapFile, QBspOptions opts)
+    QBspMapPtr QBsp_CreateBSP(std::string mapFile, QBspOptions opts)
     {
         logging::preinitialize();
         logging::mask = logging::flag::NONE;
@@ -39,12 +42,13 @@ namespace ericwtoolswrapper
             vopts.push_back("-quiet");
         if (opts.noclip)
             vopts.push_back("-noclip");
+        if (opts.nosubdivide)
+            vopts.push_back("-nosubdivide");
 
         vopts.push_back(mapFile);
         std::vector<char *> vc;
         std::transform(vopts.begin(), vopts.end(), std::back_inserter(vc), convert_opts);
 
-        auto &m = map;
         map.reset();
         InitQBSP(vc.size(), (const char **)&vc[0]);
         //  load brushes and entities
@@ -59,5 +63,8 @@ namespace ericwtoolswrapper
 
         Wrapped_WriteEntitiesToString();
         Wrapped_BSPX_CreateBrushListWrapped();
+
+        auto m = QBspMap::FromString(map.bsp.dentdata);
+        return m;
     }
 }
